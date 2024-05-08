@@ -1,0 +1,10 @@
+version: '3.9'
+
+services:
+  web:
+    build: .
+    ports:
+      - "9999:9999"
+    environment:
+      - SERVER_ROOT_URL=https://static.123qiming.com
+      - SQLALCHEMY_DATABASE_URL=postgresql://postgres:Fucheng830@192.168.2.152:5433/postgres
