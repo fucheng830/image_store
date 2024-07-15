@@ -1,3 +1,5 @@
+import load_env
+
 import base64
 import hashlib
 import io
@@ -18,8 +20,12 @@ from fastapi.responses import StreamingResponse
 
 from models import Image, ImageVectorIndex
 from database import get_db
-from image_caption import image_captioning
 from embedding import embeddings
+from image_caption import image_captioning
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
@@ -83,8 +89,11 @@ async def save_image_to_database(id, content, format, url, db):
     return True
 
 
-@app.get("/{image_url}")
-async def replace_image_route(image_url: str, db: Session = Depends(get_db)):
+@app.get("/{image_url:path}")
+async def replace_image_route(image_url: str,  background_tasks: BackgroundTasks, db: Session = Depends(get_db),):
+    logger.info(f"Received image_url: {image_url}")
+    if image_url == 'favicon.ico':
+        raise HTTPException(status_code=404, detail="Not Found")
     image = db.query(ImageVectorIndex).filter_by(source_url=image_url).first()
     if image is None:
         ext = extract_extension(image_url)
@@ -104,21 +113,12 @@ async def replace_image_route(image_url: str, db: Session = Depends(get_db)):
                 format = image_format.lower()
                 # 保存图像到数据库
                 await save_image_to_database(id, image_content, format, image_url, db)
-
-                # 创建图像描述
-                caption = image_captioning.generate_caption(image_content)
-                image_vector = embeddings.embed_query(caption)
-                
-                # 创建图像向量索引
-                create_vector_index(caption, 
-                                    image_vector, 
-                                    image_url, 
-                                    id,
-                                    db)
+                # 使用BackgroundTasks
+                background_tasks.add_task(create_vector_index, image_content, image_url, id, db)
         else:
             raise HTTPException(status_code=400, detail="Invalid image URL")
     else:
-        id = image.id
+        id = image.image_id
         image_obj = db.query(Image).filter_by(id=id).first()
         if image_obj is None:
             raise HTTPException(status_code=404, detail="Image not found")
@@ -139,7 +139,13 @@ async def replace_image_route(image_url: str, db: Session = Depends(get_db)):
 
 
 
-def create_vector_index(caption, image_vector, image_url, id, db):
+
+
+def create_vector_index(image_content, image_url, id, db):
+    # 创建图像描述
+    caption = image_captioning.generate_caption(image_content)
+    image_vector = embeddings.embed_query(caption)
+
     # 图像识别和向量化
     new_index = ImageVectorIndex(
         image_id=id,

@@ -14,6 +14,7 @@ Base = declarative_base()
 
 class Image(Base):
     __tablename__ = 'images'
+    __table_args__ = {'schema': 'img_vector'}
     id = Column(String(255), primary_key=True, nullable=False)
     image_data = Column(LargeBinary, nullable=False)
     format = Column(String(20), nullable=False)

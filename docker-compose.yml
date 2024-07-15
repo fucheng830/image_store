@@ -6,5 +6,6 @@ services:
     ports:
       - "9999:9999"
     environment:
-      - SERVER_ROOT_URL=https://static.123qiming.com
-      - SQLALCHEMY_DATABASE_URL=postgresql://postgres:Fucheng830@192.168.2.152:5433/postgres
+      - SQLALCHEMY_DATABASE_URL=postgresql://postgres:Fucheng830@192.168.1.9:5433/postgres
+      - EMBEDDING_MODEL_PATH=/code/m3e-base
+      - IMAGE_CAPTION_MODEL_PATH=/code/blip-image-captioning-base

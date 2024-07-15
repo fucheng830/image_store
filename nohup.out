@@ -1,0 +1,186 @@
+/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/torch/cuda/__init__.py:118: UserWarning: CUDA initialization: Unexpected error from cudaGetDeviceCount(). Did you run some cuda functions before calling NumCudaDevices() that might have already set an error? Error 101: invalid device ordinal (Triggered internally at ../c10/cuda/CUDAFunctions.cpp:108.)
+  return torch._C._cuda_getDeviceCount() > 0
+INFO  2024-07-15 22:04:01,353-1d: Load pretrained SentenceTransformer: /home/ubuntu/data/model_data/m3e-base
+INFO:     Started server process [2997095]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:9999 (Press CTRL+C to quit)
+INFO  2024-07-15 22:05:01,023-1d: Received image_url: https://mmbiz.qpic.cn/sz_mmbiz_jpg/D8xnbvF6lQkzQ2Ea4AjWlz4l6cibRqcu10ibG17wwvQZVibRJ911VJQujvXnYuTcnHpb8DhD8X1ZlCDhFRMJrKjwg/640
+Initializing ImageCaptioning to cpu
+INFO:     192.168.1.5:64175 - "GET /https%3A//mmbiz.qpic.cn/sz_mmbiz_jpg/D8xnbvF6lQkzQ2Ea4AjWlz4l6cibRqcu10ibG17wwvQZVibRJ911VJQujvXnYuTcnHpb8DhD8X1ZlCDhFRMJrKjwg/640?wx_fmt=jpeg&from=appmsg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1 HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1900, in _execute_context
+    self.dialect.do_execute(
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 736, in do_execute
+    cursor.execute(statement, parameters)
+psycopg2.errors.UndefinedFunction: operator does not exist: character varying = uuid
+LINE 3: WHERE img_vector.images.id = '6f7c1afd-4270-4e31-b2f4-8c4bf2...
+                                   ^
+HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/uvicorn/protocols/http/httptools_impl.py", line 411, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/uvicorn/middleware/proxy_headers.py", line 69, in __call__
+    return await self.app(scope, receive, send)
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/starlette/applications.py", line 123, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/starlette/middleware/exceptions.py", line 65, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/starlette/_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/starlette/routing.py", line 756, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/starlette/routing.py", line 776, in app
+    await route.handle(scope, receive, send)
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/starlette/routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/starlette/routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/starlette/_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/starlette/routing.py", line 72, in app
+    response = await func(request)
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/fastapi/routing.py", line 278, in app
+    raw_response = await run_endpoint_function(
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/fastapi/routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+  File "/home/ubuntu/workspace/Service/image_store/image_processor.py", line 122, in replace_image_route
+    image_obj = db.query(Image).filter_by(id=id).first()
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/sqlalchemy/orm/query.py", line 2823, in first
+    return self.limit(1)._iter().first()
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/sqlalchemy/orm/query.py", line 2907, in _iter
+    result = self.session.execute(
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 1712, in execute
+    result = conn._execute_20(statement, params or {}, execution_options)
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1705, in _execute_20
+    return meth(self, args_10style, kwargs_10style, execution_options)
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/sqlalchemy/sql/elements.py", line 333, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1572, in _execute_clauseelement
+    ret = self._execute_context(
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1943, in _execute_context
+    self._handle_dbapi_exception(
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 2124, in _handle_dbapi_exception
+    util.raise_(
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/sqlalchemy/util/compat.py", line 208, in raise_
+    raise exception
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1900, in _execute_context
+    self.dialect.do_execute(
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 736, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.ProgrammingError: (psycopg2.errors.UndefinedFunction) operator does not exist: character varying = uuid
+LINE 3: WHERE img_vector.images.id = '6f7c1afd-4270-4e31-b2f4-8c4bf2...
+                                   ^
+HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.
+
+[SQL: SELECT img_vector.images.id AS img_vector_images_id, img_vector.images.image_data AS img_vector_images_image_data, img_vector.images.format AS img_vector_images_format, img_vector.images.created_at AS img_vector_images_created_at, img_vector.images.updated_at AS img_vector_images_updated_at, img_vector.images.source_url AS img_vector_images_source_url 
+FROM img_vector.images 
+WHERE img_vector.images.id = %(id_1)s 
+ LIMIT %(param_1)s]
+[parameters: {'id_1': UUID('6f7c1afd-4270-4e31-b2f4-8c4bf2941fc0'), 'param_1': 1}]
+(Background on this error at: https://sqlalche.me/e/14/f405)
+/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/torch/cuda/__init__.py:118: UserWarning: CUDA initialization: Unexpected error from cudaGetDeviceCount(). Did you run some cuda functions before calling NumCudaDevices() that might have already set an error? Error 101: invalid device ordinal (Triggered internally at ../c10/cuda/CUDAFunctions.cpp:108.)
+  return torch._C._cuda_getDeviceCount() > 0
+INFO  2024-07-15 22:06:42,366-1d: Load pretrained SentenceTransformer: /home/ubuntu/data/model_data/m3e-base
+INFO:     Started server process [2999972]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:9999 (Press CTRL+C to quit)
+INFO  2024-07-15 22:06:49,145-1d: Received image_url: https://mmbiz.qpic.cn/sz_mmbiz_jpg/D8xnbvF6lQkzQ2Ea4AjWlz4l6cibRqcu10ibG17wwvQZVibRJ911VJQujvXnYuTcnHpb8DhD8X1ZlCDhFRMJrKjwg/640
+Initializing ImageCaptioning to cpu
+INFO:     192.168.1.5:64224 - "GET /https%3A//mmbiz.qpic.cn/sz_mmbiz_jpg/D8xnbvF6lQkzQ2Ea4AjWlz4l6cibRqcu10ibG17wwvQZVibRJ911VJQujvXnYuTcnHpb8DhD8X1ZlCDhFRMJrKjwg/640?wx_fmt=jpeg&from=appmsg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1 HTTP/1.1" 200 OK
+INFO  2024-07-15 22:08:49,047-1d: Received image_url: 
+INFO:     220.196.160.83:0 - "GET / HTTP/1.0" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/httpx/_transports/default.py", line 69, in map_httpcore_exceptions
+    yield
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/httpx/_transports/default.py", line 373, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/httpcore/_async/connection_pool.py", line 167, in handle_async_request
+    raise UnsupportedProtocol(
+httpcore.UnsupportedProtocol: Request URL is missing an 'http://' or 'https://' protocol.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/uvicorn/protocols/http/httptools_impl.py", line 411, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/uvicorn/middleware/proxy_headers.py", line 69, in __call__
+    return await self.app(scope, receive, send)
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/starlette/applications.py", line 123, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/starlette/middleware/exceptions.py", line 65, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/starlette/_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/starlette/routing.py", line 756, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/starlette/routing.py", line 776, in app
+    await route.handle(scope, receive, send)
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/starlette/routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/starlette/routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/starlette/_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/starlette/routing.py", line 72, in app
+    response = await func(request)
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/fastapi/routing.py", line 278, in app
+    raw_response = await run_endpoint_function(
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/fastapi/routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+  File "/home/ubuntu/workspace/Service/image_store/image_processor.py", line 101, in replace_image_route
+    image_content = await download_image(image_url)
+  File "/home/ubuntu/workspace/Service/image_store/image_processor.py", line 72, in download_image
+    response = await client.get(url)
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/httpx/_client.py", line 1801, in get
+    return await self.request(
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/httpx/_client.py", line 1574, in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/httpx/_client.py", line 1661, in send
+    response = await self._send_handling_auth(
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/httpx/_client.py", line 1689, in _send_handling_auth
+    response = await self._send_handling_redirects(
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/httpx/_client.py", line 1726, in _send_handling_redirects
+    response = await self._send_single_request(request)
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/httpx/_client.py", line 1763, in _send_single_request
+    response = await transport.handle_async_request(request)
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/httpx/_transports/default.py", line 372, in handle_async_request
+    with map_httpcore_exceptions():
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/contextlib.py", line 153, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/home/ubuntu/anaconda3/envs/py310/lib/python3.10/site-packages/httpx/_transports/default.py", line 86, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.UnsupportedProtocol: Request URL is missing an 'http://' or 'https://' protocol.
+INFO  2024-07-15 22:08:49,229-1d: Received image_url: favicon.ico
+INFO:     220.196.160.83:0 - "GET /favicon.ico HTTP/1.0" 404 Not Found
+INFO  2024-07-15 22:11:06,321-1d: Received image_url: https://mmbiz.qpic.cn/sz_mmbiz_jpg/D8xnbvF6lQkzQ2Ea4AjWlz4l6cibRqcu10ibG17wwvQZVibRJ911VJQujvXnYuTcnHpb8DhD8X1ZlCDhFRMJrKjwg/640
+INFO:     111.201.234.55:0 - "GET /https%3A//mmbiz.qpic.cn/sz_mmbiz_jpg/D8xnbvF6lQkzQ2Ea4AjWlz4l6cibRqcu10ibG17wwvQZVibRJ911VJQujvXnYuTcnHpb8DhD8X1ZlCDhFRMJrKjwg/640?wx_fmt=jpeg&from=appmsg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1 HTTP/1.0" 200 OK
+INFO  2024-07-15 22:11:07,398-1d: Received image_url: favicon.ico
+INFO:     111.201.234.55:0 - "GET /favicon.ico HTTP/1.0" 404 Not Found
