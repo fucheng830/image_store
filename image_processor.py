@@ -16,8 +16,10 @@ from typing import Optional
 from io import BytesIO
 from fastapi.responses import StreamingResponse
 
-from models import Image
+from models import Image, ImageVectorIndex
 from database import get_db
+from image_caption import image_captioning
+from embedding import embeddings
 
 app = FastAPI()
 
@@ -81,19 +83,52 @@ async def save_image_to_database(id, content, format, url, db):
     return True
 
 
-@app.get("/image/{image_name}")
-async def get_image(image_name: str, db: Session = Depends(get_db)):
-    id, format = image_name.split(".")
-
-    image = db.query(Image).filter_by(id=id).first()
+@app.get("/{image_url}")
+async def replace_image_route(image_url: str, db: Session = Depends(get_db)):
+    image = db.query(ImageVectorIndex).filter_by(source_url=image_url).first()
     if image is None:
-        raise HTTPException(status_code=404, detail="Image not found")
+        ext = extract_extension(image_url)
+        if ext:  # 确保扩展名存在
+            image_content = await download_image(image_url)
+            if image_content:
+                # 准备上传图像并保存到数据库
+                image_content_file = io.BytesIO(image_content)
+                md5_hash = hashlib.md5()
+                md5_hash.update(image_content)
+                id = md5_hash.hexdigest()
+                try:
+                    image_format = PILImage.open(image_content_file).format
+                except IOError:
+                    raise HTTPException(status_code=400, detail="Unable to open image file")
 
+                format = image_format.lower()
+                # 保存图像到数据库
+                await save_image_to_database(id, image_content, format, image_url, db)
+
+                # 创建图像描述
+                caption = image_captioning.generate_caption(image_content)
+                image_vector = embeddings.embed_query(caption)
+                
+                # 创建图像向量索引
+                create_vector_index(caption, 
+                                    image_vector, 
+                                    image_url, 
+                                    id,
+                                    db)
+        else:
+            raise HTTPException(status_code=400, detail="Invalid image URL")
+    else:
+        id = image.id
+        image_obj = db.query(Image).filter_by(id=id).first()
+        if image_obj is None:
+            raise HTTPException(status_code=404, detail="Image not found")
+        image_content = image_obj.image_data
+        format = image_obj.format
     # Convert the binary data to a file-like object
-    file_like = BytesIO(image.image_data)
+    file_like = BytesIO(image_content)
 
     # Determine the MIME type from the format
-    mime_type = f"image/{image.format.lower()}"
+    mime_type = f"image/{format}"
     # Stream the image back to the client
     # 添加Cache-Control头部
     headers = {
@@ -104,38 +139,16 @@ async def get_image(image_name: str, db: Session = Depends(get_db)):
 
 
 
-@app.post("/replace_image")
-async def replace_image_route(background_tasks: BackgroundTasks, image: ImageSchema, db: Session = Depends(get_db)):
-    url = image.url
-    ext = extract_extension(url)
-    if ext:  # 确保扩展名存在
-        image_content = await download_image(url)
-        if image_content:
-            # 准备上传图像并保存到数据库
-            image_content_file = io.BytesIO(image_content)
-            md5_hash = hashlib.md5()
-            md5_hash.update(image_content)
-            id = md5_hash.hexdigest()
-            try:
-                image_format = PILImage.open(image_content_file).format
-            except IOError:
-                raise HTTPException(status_code=400, detail="Unable to open image file")
-
-            format = image_format.lower()
-            # 保存图像到数据库
-            await save_image_to_database(id, image_content, format, url, db)
-            # 将创建向量索引的函数添加到后台任务
-            # background_tasks.add_task(create_vector_index, image_content)
-            
-            # 返回新图像的URL
-            new_url = f'{BASE_URL}/image/{id}.{format}'
-            return new_url
-    else:
-        raise HTTPException(status_code=400, detail=f"Could not determine the image extension for {url}")
-
-async def create_vector_index(image_content):
+def create_vector_index(caption, image_vector, image_url, id, db):
     # 图像识别和向量化
-    pass
+    new_index = ImageVectorIndex(
+        image_id=id,
+        name=caption,
+        embedding=image_vector,
+        source_url=image_url
+    )
+    db.add(new_index)
+    db.commit()
 
     
 if __name__=='__main__':
